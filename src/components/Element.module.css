@@ -1,0 +1,15 @@
+
+.element {
+    height: 120px;
+    width: 120px;
+    border: 1px solid white;
+    border-radius: 50%;
+}
+
+.active {
+    background-color: yellow;
+}
+
+.default {
+    background-color: black;
+}
