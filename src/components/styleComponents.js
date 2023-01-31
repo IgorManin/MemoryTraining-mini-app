@@ -87,7 +87,7 @@ export const GameBlockWrapper = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 `;
 
@@ -95,7 +95,7 @@ export const Header = styled.div`
   height: 20%;
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 `;
 export const Footer = styled.div`
@@ -114,7 +114,7 @@ export const Game = styled.div`
   align-items: center;
 `;
 
-export const Element = styled.div`
+export const Element = styled.button`
   height: 120px;
   width: 120px;
   border: 1px solid white;
