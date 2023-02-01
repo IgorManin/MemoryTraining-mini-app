@@ -102,7 +102,7 @@ export const Footer = styled.div`
   height: 20%;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 
@@ -120,5 +120,41 @@ export const Element = styled.button`
   border: 1px solid white;
   border-radius: 50%;
   background-color: ${({ $isActive }) => ($isActive ? 'yellow' : 'black')};
+  border: ${({ $isChecked }) => `3px solid ${$isChecked}`};
   cursor: pointer;
+`;
+
+export const Health = styled.div`
+  height: 40px;
+  width: 200px;
+  border: 1px solid white;
+  background-color: yellow;
+`;
+
+export const Level = styled.div`
+  height: 40px;
+  width: 200px;
+  border: 1px solid white;
+  background-color: yellow;
+`;
+
+export const Text = styled.div`
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  color: black;
+  font-size: x-large;
+  margin-top: 5px;
+`;
+
+export const WrapperForChooseMoveButton = styled.div`
+  display: flex;
+  width: 30%;
+`;
+
+export const WrapperForGameStarButton = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  align-items: end;
 `;
