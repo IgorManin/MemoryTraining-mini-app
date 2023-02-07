@@ -26,37 +26,66 @@ const GameBlock = () => {
   const [level, setLevel] = useState(1);
 
   useEffect(() => {
-    if (lives === 0) {
-      alert('loose');
+    if (!isUserMove && level !== 1) {
+      changeColorRandomElement(level);
     }
-  }, [lives]);
+  }, [level, isUserMove]);
+  console.log('movesHistory in Function', movesHistory);
 
   const checkId = (id) => {
-    if (id === movesHistory[0]) {
-      setUserId({ id, color: 'green' });
-      setLevel((prevState) => prevState + 1);
-      setTimeout(() => {
-        setUserMove(false);
-      }, 500);
+    if (movesHistory.length === 1) {
+      if (id === movesHistory[0]) {
+        setUserId({ id, color: 'green' });
+        setLevel((prevState) => prevState + 1);
+        setTimeout(() => {
+          setUserMove(false);
+          setHistory([]);
+        }, 500);
+      } else {
+        setUserId({ id, color: 'red' });
+        setLives((prevState) => prevState - 1);
+      }
     } else {
-      setUserId({ id, color: 'red' });
-      setLives((prevState) => prevState - 1);
+      if (id === movesHistory[0]) {
+        setUserId({ id, color: 'green' });
+        setHistory((prevState) => {
+          prevState.shift();
+          return prevState;
+        });
+      } else {
+        setUserId({ id, color: 'red' });
+        setLives((prevState) => prevState - 1);
+      }
     }
     setTimeout(() => {
       setUserId(null);
     }, 500);
   };
 
-  const changeColorRandomElement = () => {
+  const changeColorRandomElement = (level = 1) => {
     setGameStart(true);
-    const randomInt = getRandomInt(5);
-    setCurrentNumber(randomInt);
-    setHistory((prevState) => [...prevState, randomInt]);
+    const funcBefore = () => {
+      const randomInt = getRandomInt(5);
+      setCurrentNumber(randomInt);
+      setHistory((prevState) => [...prevState, randomInt]);
 
-    setTimeout(() => {
-      setCurrentNumber(null);
-      setUserMove(true);
-    }, 1000);
+      setTimeout(() => {
+        setCurrentNumber(null);
+
+        if (movesHistory.length + 1 === level) {
+          setUserMove(true);
+        }
+      }, 1000);
+    };
+    let count = 0;
+
+    const intervalId = setInterval(function () {
+      count++;
+      if (count === level) {
+        clearInterval(intervalId);
+      }
+      funcBefore();
+    }, 2000);
   };
 
   const arrayElement = [...Array(buttonsLength).keys()].map((id) => (
@@ -64,7 +93,7 @@ const GameBlock = () => {
       key={id}
       disabled={!isUserMove}
       $isActive={id === currentNumber}
-      onClick={() => checkId(id)}
+      onClick={() => checkId(id, level)}
       $isChecked={id === currentUserId?.id ? currentUserId?.color : null}
     />
   ));
