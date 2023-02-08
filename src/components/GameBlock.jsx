@@ -24,19 +24,23 @@ const GameBlock = () => {
   const [currentUserId, setUserId] = useState(null);
   const [lives, setLives] = useState(3);
   const [level, setLevel] = useState(1);
+  const [moveNymbers, setNumbers] = useState(1);
+
+  console.log('movesHistory', movesHistory);
 
   useEffect(() => {
     if (!isUserMove && level !== 1) {
       changeColorRandomElement(level);
     }
   }, [level, isUserMove]);
-  console.log('movesHistory in Function', movesHistory);
 
   const checkId = (id) => {
     if (movesHistory.length === 1) {
       if (id === movesHistory[0]) {
         setUserId({ id, color: 'green' });
         setLevel((prevState) => prevState + 1);
+        setNumbers((prevState) => prevState + 1);
+
         setTimeout(() => {
           setUserMove(false);
           setHistory([]);
@@ -72,7 +76,7 @@ const GameBlock = () => {
       setTimeout(() => {
         setCurrentNumber(null);
 
-        if (movesHistory.length + 1 === level) {
+        if (moveNymbers === level) {
           setUserMove(true);
         }
       }, 1000);
