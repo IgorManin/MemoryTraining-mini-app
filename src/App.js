@@ -10,7 +10,8 @@ import {
   View,
 } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-import GameBlock from './components/GameBlock';
+import GameBlock from './panels/GameBlock';
+import StartPanel from './panels/StartPanel';
 
 const App = () => {
   const [scheme, setScheme] = useState('bright_light');
@@ -45,7 +46,10 @@ const App = () => {
           <SplitLayout popout={popout}>
             <SplitCol>
               <View activePanel={activePanel}>
-                <GameBlock id="home" go={go} />
+                <GameBlock id="game" go={go} />
+                <StartPanel id="home" go={go}>
+                  {' '}
+                </StartPanel>
               </View>
             </SplitCol>
           </SplitLayout>

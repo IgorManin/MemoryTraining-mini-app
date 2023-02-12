@@ -158,3 +158,58 @@ export const WrapperForGameStarButton = styled.div`
   width: 70%;
   align-items: end;
 `;
+
+export const AlertPopUp = styled.div`
+  width: 500px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid white;
+  box-shadow: 5px 5px 5px yellow;
+`;
+
+export const WrapperAlertText = styled.div`
+  width: 400px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+`;
+export const AlertText = styled.p`
+  display: flex;
+  flex-direction: column;
+  font-size: x-large;
+  color: white;
+  text-align: center;
+`;
+
+export const TittleWrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const WrapperText = styled.div`
+  width: 400px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid white;
+`;
+export const MainTittle = styled.p`
+  display: flex;
+  flex-direction: column;
+  font-size: x-large;
+  color: white;
+  text-align: center;
+`;
+
+export const WrapperBotton = styled.div`
+  width: 950px;
+  height: 100px;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+`;
