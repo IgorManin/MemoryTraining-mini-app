@@ -2,14 +2,6 @@ import styled from '@emotion/styled/macro';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 
-export const PanelWrapper = styled.div`
-  height: 700px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-image: url(/src/img/pnd.png);
-`;
-
 export const CardsWrapper = styled.div`
   height: 1500px;
   width: 2000px;
@@ -17,10 +9,6 @@ export const CardsWrapper = styled.div`
   justify-content: space-around;
   align-items: center;
   overflow-x: scroll;
-`;
-
-export const ButtonStyled = styled(Button)`
-  border: 2px solid red;
 `;
 
 export const CardsWrapper3 = styled(CardsWrapper)`
@@ -78,11 +66,6 @@ export const CardStyled = styled(Card)`
   }
 `;
 
-// export const NoAddress = styled.div`
-//   text-align: center;
-//   padding: ${({ $isMobile }) =>};
-// `
-
 export const GameBlockWrapper = styled.div`
   height: 100vh;
   display: flex;
@@ -98,6 +81,7 @@ export const Header = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
 export const Footer = styled.div`
   height: 20%;
   width: 100%;
@@ -159,31 +143,15 @@ export const WrapperForGameStarButton = styled.div`
   align-items: end;
 `;
 
-export const AlertPopUp = styled.div`
-  width: 500px;
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid white;
-  box-shadow: 5px 5px 5px yellow;
-`;
-
-export const WrapperAlertText = styled.div`
-  width: 400px;
+export const WrapperBotton = styled.div`
+  width: 950px;
   height: 100px;
   display: flex;
+  justify-content: flex-start;
   flex-direction: column;
-`;
-export const AlertText = styled.p`
-  display: flex;
-  flex-direction: column;
-  font-size: x-large;
-  color: white;
-  text-align: center;
 `;
 
-export const TittleWrapper = styled.div`
+export const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -191,25 +159,11 @@ export const TittleWrapper = styled.div`
   align-items: center;
 `;
 
-export const WrapperText = styled.div`
+export const WrapperButtons = styled.div`
   width: 400px;
   height: 200px;
   display: flex;
   flex-direction: column;
-  border: 1px solid white;
-`;
-export const MainTittle = styled.p`
-  display: flex;
-  flex-direction: column;
-  font-size: x-large;
-  color: white;
-  text-align: center;
-`;
-
-export const WrapperBotton = styled.div`
-  width: 950px;
-  height: 100px;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;

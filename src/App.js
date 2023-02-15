@@ -1,55 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import bridge from '@vkontakte/vk-bridge';
+import React, { useState } from 'react';
 import {
   AdaptivityProvider,
   AppRoot,
   ConfigProvider,
-  ScreenSpinner,
   SplitCol,
   SplitLayout,
   View,
 } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 import GameBlock from './panels/GameBlock';
-import StartPanel from './panels/StartPanel';
+import MainPanel from './panels/MainPanel';
+import Settings from './panels/Settings';
+import Records from './panels/Records';
 
 const App = () => {
-  const [scheme, setScheme] = useState('bright_light');
-  const [activePanel, setActivePanel] = useState('home');
-  const [fetchedUser, setUser] = useState(null);
-  const [popout, setPopout] = useState(<ScreenSpinner size="large" />);
+  const [activePanel, setActivePanel] = useState('main');
 
-  useEffect(() => {
-    bridge.subscribe(({ detail: { type, data } }) => {
-      if (type === 'VKWebAppUpdateConfig') {
-        setScheme(data.scheme);
-      }
-    });
-
-    async function fetchData() {
-      const user = await bridge.send('VKWebAppGetUserInfo');
-      setUser(user);
-      setPopout(null);
-    }
-
-    fetchData();
-  }, []);
-
-  const go = (e) => {
-    setActivePanel(e.currentTarget.dataset.to);
-  };
+  const go = (e) => setActivePanel(e.currentTarget.dataset.to);
 
   return (
-    <ConfigProvider scheme={scheme}>
+    <ConfigProvider>
       <AdaptivityProvider>
         <AppRoot>
-          <SplitLayout popout={popout}>
+          <SplitLayout>
             <SplitCol>
-              <View activePanel={activePanel}>
+              <View style={{ background: 'black' }} activePanel={activePanel}>
                 <GameBlock id="game" go={go} />
-                <StartPanel id="home" go={go}>
-                  {' '}
-                </StartPanel>
+                <MainPanel id="main" go={go} />
+                <Settings id="settings" go={go} />
+                <Records id="records" go={go} />
               </View>
             </SplitCol>
           </SplitLayout>

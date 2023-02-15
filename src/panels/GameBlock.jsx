@@ -11,20 +11,15 @@ import {
   WrapperBotton,
   WrapperForChooseMoveButton,
   WrapperForGameStarButton,
-} from '../styleComponents';
+} from '../components/styleComponents';
 import Button from '@mui/material/Button';
-import LoosAlertModal from '../components/LoosAlertModal';
 import { Panel } from '@vkontakte/vkui';
+import LosingAlertModal from '../components/LosingAlertModal';
 
 const buttonsLength = 5;
 const getRandomInt = (max) => Math.floor(Math.random() * max);
 
-const recordGame = [0];
-const changeRecord = (value) => {
-  if (value > recordGame) {
-    recordGame.push(value);
-  }
-};
+let recordGame = 0;
 
 const GameBlock = (props) => {
   const [currentNumber, setCurrentNumber] = useState(null);
@@ -34,10 +29,14 @@ const GameBlock = (props) => {
   const [currentUserId, setUserId] = useState(null);
   const [lives, setLives] = useState(3);
   const [level, setLevel] = useState(1);
-  const [moveNymbers, setNumbers] = useState(1);
+  const [moveNumbers, setNumbers] = useState(1);
   const [alertModal, setAlertModal] = useState(false);
   const [backToHome, setBackToHome] = useState(true);
-  const [record, setRecord] = useState([]);
+  const [record, setRecord] = useState(null);
+  const [startGameButton, setGameButton] = useState(true);
+
+  console.log('record', record);
+  console.log('recordGame', recordGame);
 
   useEffect(() => {
     if (!isUserMove && level !== 1) {
@@ -45,14 +44,12 @@ const GameBlock = (props) => {
     }
   }, [level, isUserMove]);
 
-  useEffect(() => {
-    console.log('record', record);
-    console.log('recordGame', recordGame);
-    if (record > recordGame) {
-      changeRecord(record);
-      setRecord([]);
-    }
-  }, [alertModal]);
+  const backToGame = () => {
+    setAlertModal(false);
+    setLives(3);
+    setLevel(1);
+    changeColorRandomElement();
+  };
 
   const checkId = (id) => {
     if (movesHistory.length === 1) {
@@ -71,7 +68,8 @@ const GameBlock = (props) => {
         if (lives === 1) {
           setAlertModal(true);
           setGameStart(false);
-          setRecord((prevState) => [...prevState, level]);
+          setRecord(level);
+          setHistory([]);
         }
       }
     } else {
@@ -87,7 +85,8 @@ const GameBlock = (props) => {
         if (lives === 1) {
           setAlertModal(true);
           setGameStart(false);
-          setRecord((prevState) => [...prevState, level]);
+          setRecord(level);
+          setHistory([]);
         }
       }
     }
@@ -97,6 +96,7 @@ const GameBlock = (props) => {
   };
 
   const changeColorRandomElement = (level = 1) => {
+    setGameButton(false);
     setBackToHome(false);
     setGameStart(true);
     const funcBefore = () => {
@@ -107,7 +107,7 @@ const GameBlock = (props) => {
       setTimeout(() => {
         setCurrentNumber(null);
 
-        if (moveNymbers === level) {
+        if (moveNumbers === level) {
           setUserMove(true);
         }
       }, 1000);
@@ -140,7 +140,7 @@ const GameBlock = (props) => {
             {backToHome && (
               <Button
                 onClick={props.go}
-                data-to="home"
+                data-to="main"
                 style={{ margin: 22 }}
                 variant="contained"
               >
@@ -153,23 +153,29 @@ const GameBlock = (props) => {
               </Button>
             )}
           </WrapperForChooseMoveButton>
-
-          <WrapperForGameStarButton>
-            {!alertModal && (
-              <Button
-                onClick={() => changeColorRandomElement()}
-                style={{ margin: 22 }}
-                variant="contained"
-              >
-                Начать игру
-              </Button>
-            )}
-          </WrapperForGameStarButton>
+          {startGameButton && (
+            <WrapperForGameStarButton>
+              {!alertModal && (
+                <Button
+                  onClick={() => changeColorRandomElement()}
+                  style={{ margin: 22 }}
+                  variant="contained"
+                >
+                  Начать игру
+                </Button>
+              )}
+            </WrapperForGameStarButton>
+          )}
         </Header>
-        {alertModal && (
-          <LoosAlertModal level={level} go={props.go}></LoosAlertModal>
+        {alertModal ? (
+          <LosingAlertModal
+            level={level}
+            levelDifference={recordGame - record}
+            clickHandler={backToGame}
+          />
+        ) : (
+          <Game>{arrayElement}</Game>
         )}
-        {!alertModal && <Game>{arrayElement}</Game>}
         <Footer>
           {isGameStart && (
             <Level>
@@ -180,12 +186,12 @@ const GameBlock = (props) => {
             <Health>
               <Text> Жизни: {lives}</Text>
             </Health>
-          )}{' '}
+          )}
           {backToHome && (
             <WrapperBotton>
               <Button
                 onClick={props.go}
-                data-to="home"
+                data-to="main"
                 style={{ margin: 22, width: '120px' }}
                 variant="contained"
               >
