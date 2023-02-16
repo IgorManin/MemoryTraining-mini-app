@@ -1,27 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Element,
-  Footer,
-  Game,
-  GameBlockWrapper,
-  Header,
-  Health,
-  Level,
-  Text,
-  WrapperBotton,
-  WrapperForChooseMoveButton,
-  WrapperForGameStarButton,
-} from '../components/styleComponents';
-import Button from '@mui/material/Button';
 import { Panel } from '@vkontakte/vkui';
-import LosingAlertModal from '../components/LosingAlertModal';
+import LosingModal from '../../components/LosingModal';
+import {
+  BackToMainMenuButton,
+  Container,
+} from '../../components/styleComponents';
+import { ButtonStyled, Element, Footer, Game, Header, Text } from './styled';
 
 const buttonsLength = 5;
 const getRandomInt = (max) => Math.floor(Math.random() * max);
 
 let recordGame = 0;
 
-const GameBlock = (props) => {
+const GameBlock = ({ go, id }) => {
   const [currentNumber, setCurrentNumber] = useState(null);
   const [isUserMove, setUserMove] = useState(false);
   const [isGameStart, setGameStart] = useState(false);
@@ -29,14 +20,11 @@ const GameBlock = (props) => {
   const [currentUserId, setUserId] = useState(null);
   const [lives, setLives] = useState(3);
   const [level, setLevel] = useState(1);
-  const [moveNumbers, setNumbers] = useState(1);
-  const [alertModal, setAlertModal] = useState(false);
-  const [backToHome, setBackToHome] = useState(true);
+  const [moveNumber, setNumber] = useState(1);
+  const [modal, setModal] = useState(false);
+  const [isBackToHome, setBackToHome] = useState(true);
   const [record, setRecord] = useState(null);
   const [startGameButton, setGameButton] = useState(true);
-
-  console.log('record', record);
-  console.log('recordGame', recordGame);
 
   useEffect(() => {
     if (!isUserMove && level !== 1) {
@@ -45,9 +33,10 @@ const GameBlock = (props) => {
   }, [level, isUserMove]);
 
   const backToGame = () => {
-    setAlertModal(false);
+    setModal(false);
     setLives(3);
     setLevel(1);
+    setNumber(1);
     changeColorRandomElement();
   };
 
@@ -56,7 +45,7 @@ const GameBlock = (props) => {
       if (id === movesHistory[0]) {
         setUserId({ id, color: 'green' });
         setLevel((prevState) => prevState + 1);
-        setNumbers((prevState) => prevState + 1);
+        setNumber((prevState) => prevState + 1);
 
         setTimeout(() => {
           setUserMove(false);
@@ -66,7 +55,7 @@ const GameBlock = (props) => {
         setUserId({ id, color: 'red' });
         setLives((prevState) => prevState - 1);
         if (lives === 1) {
-          setAlertModal(true);
+          setModal(true);
           setGameStart(false);
           setRecord(level);
           setHistory([]);
@@ -83,7 +72,7 @@ const GameBlock = (props) => {
         setUserId({ id, color: 'red' });
         setLives((prevState) => prevState - 1);
         if (lives === 1) {
-          setAlertModal(true);
+          setModal(true);
           setGameStart(false);
           setRecord(level);
           setHistory([]);
@@ -107,7 +96,7 @@ const GameBlock = (props) => {
       setTimeout(() => {
         setCurrentNumber(null);
 
-        if (moveNumbers === level) {
+        if (moveNumber === level) {
           setUserMove(true);
         }
       }, 1000);
@@ -133,42 +122,30 @@ const GameBlock = (props) => {
   ));
 
   return (
-    <Panel id={props.id}>
-      <GameBlockWrapper>
+    <Panel id={id}>
+      <Container>
         <Header>
-          <WrapperForChooseMoveButton>
-            {backToHome && (
-              <Button
-                onClick={props.go}
-                data-to="main"
-                style={{ margin: 22 }}
-                variant="contained"
-              >
-                Рекорд: {recordGame}
-              </Button>
-            )}
-            {isGameStart && (
-              <Button style={{ margin: 22 }} variant="contained">
-                {isUserMove ? 'ход игрока' : 'ход компьютера'}
-              </Button>
-            )}
-          </WrapperForChooseMoveButton>
-          {startGameButton && (
-            <WrapperForGameStarButton>
-              {!alertModal && (
-                <Button
-                  onClick={() => changeColorRandomElement()}
-                  style={{ margin: 22 }}
-                  variant="contained"
-                >
-                  Начать игру
-                </Button>
-              )}
-            </WrapperForGameStarButton>
+          {backToHome && (
+            <ButtonStyled onClick={go} data-to="main" variant="contained">
+              Рекорд: {recordGame}
+            </ButtonStyled>
+          )}
+          {isGameStart && (
+            <ButtonStyled variant="contained">
+              {isUserMove ? 'ход игрока' : 'ход компьютера'}
+            </ButtonStyled>
+          )}
+          {startGameButton && !modal && (
+            <ButtonStyled
+              onClick={() => changeColorRandomElement()}
+              variant="contained"
+            >
+              Начать игру
+            </ButtonStyled>
           )}
         </Header>
-        {alertModal ? (
-          <LosingAlertModal
+        {modal ? (
+          <LosingModal
             level={level}
             levelDifference={recordGame - record}
             clickHandler={backToGame}
@@ -178,29 +155,22 @@ const GameBlock = (props) => {
         )}
         <Footer>
           {isGameStart && (
-            <Level>
+            <>
               <Text> Уровень: {level}</Text>
-            </Level>
-          )}
-          {isGameStart && (
-            <Health>
               <Text> Жизни: {lives}</Text>
-            </Health>
+            </>
           )}
-          {backToHome && (
-            <WrapperBotton>
-              <Button
-                onClick={props.go}
-                data-to="main"
-                style={{ margin: 22, width: '120px' }}
-                variant="contained"
-              >
-                Назад
-              </Button>
-            </WrapperBotton>
+          {isBackToHome && (
+            <BackToMainMenuButton
+              onClick={go}
+              data-to="main"
+              variant="contained"
+            >
+              Назад
+            </BackToMainMenuButton>
           )}
         </Footer>
-      </GameBlockWrapper>
+      </Container>
     </Panel>
   );
 };

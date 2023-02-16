@@ -8,8 +8,8 @@ import {
   View,
 } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
-import GameBlock from './panels/GameBlock';
-import MainPanel from './panels/MainPanel';
+import GameBlock from './panels/Game';
+import MainPanel from './panels/Main';
 import Settings from './panels/Settings';
 import Records from './panels/Records';
 

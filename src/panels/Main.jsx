@@ -40,19 +40,23 @@ const buttons = [
   },
 ];
 
-const MainPanel = ({id, go}) =>
-    (
-        <Panel id={id}>
-          <Container>
-            <Record>Рекорд:</Record>
-            <Title>Игра для тренировки памяти</Title>
-            {buttons.map(({name, dataTo}) => (
-                <ButtonStyled key={name} onClick={go} data-to={dataTo} variant="contained">
-                  {name}
-                </ButtonStyled>
-            ))}
-          </Container>
-        </Panel>
-    );
+const MainPanel = ({ id, go }) => (
+  <Panel id={id}>
+    <Container>
+      <Record>Рекорд:</Record>
+      <Title>Игра для тренировки памяти</Title>
+      {buttons.map(({ name, dataTo }) => (
+        <ButtonStyled
+          key={name}
+          onClick={go}
+          data-to={dataTo}
+          variant="contained"
+        >
+          {name}
+        </ButtonStyled>
+      ))}
+    </Container>
+  </Panel>
+);
 
 export default MainPanel;

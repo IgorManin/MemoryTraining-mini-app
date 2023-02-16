@@ -1,19 +1,14 @@
-import Button from '@mui/material/Button';
+import { BackToMainMenuButton, Container } from '../components/styleComponents';
 
-const Records = (props) => {
+const Records = ({ go }) => {
   return (
-    <div>
+    <Container>
       <div>
-        <Button
-          onClick={props.go}
-          data-to="main"
-          style={{ margin: 22, width: '120px' }}
-          variant="contained"
-        >
+        <BackToMainMenuButton onClick={go} data-to="main" variant="contained">
           Назад
-        </Button>
+        </BackToMainMenuButton>
       </div>
-    </div>
+    </Container>
   );
 };
 

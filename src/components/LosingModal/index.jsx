@@ -1,6 +1,6 @@
 import { ButtonStyled, Container, Text } from './styled';
 
-const LosingAlertModal = ({ clickHandler, level, levelDifference }) => (
+const LosingModal = ({ clickHandler, level, levelDifference }) => (
   <Container>
     <Text>
       {levelDifference < 0
@@ -17,4 +17,4 @@ const LosingAlertModal = ({ clickHandler, level, levelDifference }) => (
   </Container>
 );
 
-export default LosingAlertModal;
+export default LosingModal;
