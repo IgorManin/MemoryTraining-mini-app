@@ -2,15 +2,7 @@ import { Panel } from '@vkontakte/vkui';
 import { Container } from '../components/styleComponents';
 import Button from '@mui/material/Button';
 import styled from '@emotion/styled/macro';
-
-const Record = styled.p`
-  width: 300px;
-  height: 50px;
-  display: flex;
-  border-style: dotted;
-  color: white;
-  font-size: xx-large;
-`;
+import PropTypes from 'prop-types';
 
 const Title = styled.p`
   display: flex;
@@ -43,7 +35,6 @@ const buttons = [
 const MainPanel = ({ id, go }) => (
   <Panel id={id}>
     <Container>
-      <Record>Рекорд:</Record>
       <Title>Игра для тренировки памяти</Title>
       {buttons.map(({ name, dataTo }) => (
         <ButtonStyled
@@ -58,5 +49,10 @@ const MainPanel = ({ id, go }) => (
     </Container>
   </Panel>
 );
+
+MainPanel.propTypes = {
+  id: PropTypes.number,
+  go: PropTypes.func,
+};
 
 export default MainPanel;

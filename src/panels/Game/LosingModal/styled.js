@@ -1,15 +1,5 @@
 import styled from '@emotion/styled/macro';
-import Button from '@mui/material/Button';
-
-export const Container = styled.div`
-  width: 500px;
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid white;
-  box-shadow: 5px 5px 5px yellow;
-`;
+import { Button, ModalCardBase } from '@vkontakte/vkui';
 
 export const Text = styled.p`
   width: 400px;
@@ -23,4 +13,12 @@ export const Text = styled.p`
 
 export const ButtonStyled = styled(Button)`
   margin: 22px;
+`;
+
+export const ModalCardBaseStyled = styled(ModalCardBase)`
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;

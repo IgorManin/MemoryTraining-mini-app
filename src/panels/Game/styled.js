@@ -51,3 +51,14 @@ export const Text = styled.div`
 export const ButtonStyled = styled(Button)`
   margin: 22px;
 `;
+
+export const Record = styled.div`
+  width: 100px;
+  height: 23px;
+  display: flex;
+  border-style: dotted;
+  color: white;
+  font-size: large;
+  margin-right: 22px;
+  padding: 5px;
+`;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { BackToMainMenuButton, Container } from '../components/styleComponents';
 
 const Settings = ({ go }) => {
@@ -10,6 +11,10 @@ const Settings = ({ go }) => {
       </div>
     </Container>
   );
+};
+
+Settings.propTypes = {
+  go: PropTypes.func,
 };
 
 export default Settings;

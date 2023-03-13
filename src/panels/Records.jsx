@@ -1,4 +1,5 @@
 import { BackToMainMenuButton, Container } from '../components/styleComponents';
+import PropTypes from 'prop-types';
 
 const Records = ({ go }) => {
   return (
@@ -10,6 +11,10 @@ const Records = ({ go }) => {
       </div>
     </Container>
   );
+};
+
+Records.propTypes = {
+  go: PropTypes.func,
 };
 
 export default Records;
