@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 const buttonsLength = 5;
 const getRandomInt = (max) => Math.floor(Math.random() * max);
 
-const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
+const GameBlock = ({ go, id, goModals, recordGame, setRecordGame }) => {
   const [currentNumber, setCurrentNumber] = useState(null);
   const [isUserMove, setUserMove] = useState(false);
   const [isGameStart, setGameStart] = useState(false);
@@ -30,25 +30,12 @@ const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
   const [isBackToHome, setBackToHome] = useState(true);
   const [record, setRecord] = useState(0);
   const [isGameBegun, setGameBegun] = useState(true);
-  const [isCurrentRecord, serCurrentRecord] = useState(null);
-
-  const [isGameEnd, setGameEnd] = useState(true);
-  const [isGame, setGame] = useState(true);
 
   useEffect(() => {
     if (!isUserMove && level !== 1) {
       changeColorRandomElement(level);
     }
   }, [level, isUserMove]);
-
-  useEffect(() => {
-    if (type === 'active') {
-      setGame(false);
-    }
-    if (type === 'game') {
-      setGame(true);
-    }
-  }, [type]);
 
   const backToGame = () => {
     setLives(3);
@@ -57,7 +44,6 @@ const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
     if (record > recordGame) {
       setRecordGame(record);
     }
-    goModals('game');
     changeColorRandomElement();
   };
 
@@ -66,10 +52,9 @@ const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
     setLives((prevState) => prevState - 1);
     if (lives === 1) {
       setRecord(level);
-      console.log(record);
       setHistory([]);
       const levelDifference = record - level;
-      goModals('active', level, levelDifference, backToGame);
+      goModals('active', { level, levelDifference, onClose: backToGame });
     }
   };
 
@@ -146,49 +131,47 @@ const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
 
   return (
     <Panel id={id}>
-      {isGame && (
-        <Container>
-          <Header>
-            {isBackToHome && (
-              <ButtonStyled onClick={go} data-to="main" variant="contained">
-                Рекорд: {recordGame}
-              </ButtonStyled>
-            )}
-            {isGameStart && (
-              <ButtonStyled variant="contained">
-                {isUserMove ? 'ход игрока' : 'ход компьютера'}
-              </ButtonStyled>
-            )}
-            {isGameBegun && (
-              <ButtonStyled
-                onClick={() => changeColorRandomElement()}
-                variant="contained"
-              >
-                Начать игру
-              </ButtonStyled>
-            )}
-            {recordGame > 0 && <Record> Рекорд: {recordGame} </Record>}
-          </Header>
-          {isGameEnd && <Game>{arrayElement}</Game>}
-          <Footer>
-            {isGameStart && (
-              <>
-                <Text> Уровень: {level}</Text>
-                <Text> Жизни: {lives}</Text>
-              </>
-            )}
-            {isBackToHome && (
-              <BackToMainMenuButton
-                onClick={go}
-                data-to="main"
-                variant="contained"
-              >
-                Назад
-              </BackToMainMenuButton>
-            )}
-          </Footer>
-        </Container>
-      )}
+      <Container>
+        <Header>
+          {isBackToHome && (
+            <ButtonStyled onClick={go} data-to="main" variant="contained">
+              Рекорд: {recordGame}
+            </ButtonStyled>
+          )}
+          {isGameStart && (
+            <ButtonStyled variant="contained">
+              {isUserMove ? 'ход игрока' : 'ход компьютера'}
+            </ButtonStyled>
+          )}
+          {isGameBegun && (
+            <ButtonStyled
+              onClick={() => changeColorRandomElement()}
+              variant="contained"
+            >
+              Начать игру
+            </ButtonStyled>
+          )}
+          {recordGame > 0 && <Record> Рекорд: {recordGame} </Record>}
+        </Header>
+        <Game>{arrayElement}</Game>
+        <Footer>
+          {isGameStart && (
+            <>
+              <Text> Уровень: {level}</Text>
+              <Text> Жизни: {lives}</Text>
+            </>
+          )}
+          {isBackToHome && (
+            <BackToMainMenuButton
+              onClick={go}
+              data-to="main"
+              variant="contained"
+            >
+              Назад
+            </BackToMainMenuButton>
+          )}
+        </Footer>
+      </Container>
     </Panel>
   );
 };

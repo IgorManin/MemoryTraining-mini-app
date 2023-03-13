@@ -18,33 +18,32 @@ import { LosingModal } from './panels/Game/LosingModal';
 const App = () => {
   const [recordGame, setRecordGame] = useState(0);
   const [activePanel, setActivePanel] = useState('main');
-  const [{ type, level, levelDifference, clickHandler }, setModal] = useState({
+  const [{ type, ...props }, setModal] = useState({
     type: null,
-    level: 1,
-    levelDifference: 0,
-    clickHandler: null,
   });
 
   const go = (e) => setActivePanel(e.currentTarget.dataset.to);
 
-  const goModals = (id, level, levelDifference, clickHandler) => {
-    if (id) {
-      setModal({
-        type: id,
-        level: level,
-        levelDifference: levelDifference,
-        clickHandler: clickHandler,
-      });
+  const goModals = (id, props) =>
+    setModal({
+      type: id,
+      ...props,
+    });
+
+  const onClose = () => {
+    setModal({ type: null });
+    if (props.onClose) {
+      props.onClose();
     }
   };
 
   const modal = (
-    <ModalRoot activeModal={type} onClose={clickHandler}>
+    <ModalRoot activeModal={type} onClose={onClose}>
       <ModalPage id="active">
         <LosingModal
-          level={level}
-          levelDifference={levelDifference}
-          clickHandler={clickHandler}
+          level={props?.level || 1}
+          levelDifference={props?.levelDifference || 0}
+          clickHandler={onClose}
         />
       </ModalPage>
     </ModalRoot>
@@ -74,5 +73,4 @@ const App = () => {
     </AdaptivityProvider>
   );
 };
-
 export default App;
