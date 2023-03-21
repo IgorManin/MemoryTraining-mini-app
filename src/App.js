@@ -15,36 +15,29 @@ import Settings from './panels/Settings';
 import Records from './panels/Records';
 import { LosingModal } from './panels/Game/LosingModal';
 
-const App = () => {
-  const [recordGame, setRecordGame] = useState(0);
+const App = ({ store }) => {
   const [activePanel, setActivePanel] = useState('main');
-  const [{ type, level, levelDifference, clickHandler }, setModal] = useState({
-    type: null,
-    level: 1,
-    levelDifference: 0,
-    clickHandler: null,
-  });
+
+  // const [{ type, ...values }, setModal] = useState({
+  //   type: null,
+  // });
 
   const go = (e) => setActivePanel(e.currentTarget.dataset.to);
 
-  const goModals = (id, level, levelDifference, clickHandler) => {
-    if (id) {
-      setModal({
-        type: id,
-        level: level,
-        levelDifference: levelDifference,
-        clickHandler: clickHandler,
-      });
-    }
-  };
+  // const onClose = () => {
+  //   setModal({ type: null });
+  //   if (values.onClose) {
+  //     values.onClose();
+  //   }
+  // };
 
   const modal = (
-    <ModalRoot activeModal={type} onClose={clickHandler}>
+    <ModalRoot activeModal={store.modal.type} onClose={store.modal.closeModal}>
       <ModalPage id="active">
         <LosingModal
-          level={level}
-          levelDifference={levelDifference}
-          clickHandler={clickHandler}
+          level={store.game?.level || 1}
+          levelDifference={store.modal.values?.levelDifference || 0}
+          clickHandler={store.modal.closeModal}
         />
       </ModalPage>
     </ModalRoot>
@@ -56,14 +49,7 @@ const App = () => {
         <SplitLayout modal={modal}>
           <SplitCol>
             <View style={{ background: 'black' }} activePanel={activePanel}>
-              <GameBlock
-                id="game"
-                go={go}
-                goModals={goModals}
-                type={type}
-                setRecordGame={setRecordGame}
-                recordGame={recordGame}
-              />
+              <GameBlock store={store} id="game" go={go} />
               <MainPanel id="main" go={go} />
               <Settings id="settings" go={go} />
               <Records id="records" go={go} />
@@ -74,5 +60,4 @@ const App = () => {
     </AdaptivityProvider>
   );
 };
-
 export default App;

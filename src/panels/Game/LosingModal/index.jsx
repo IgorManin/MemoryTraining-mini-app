@@ -7,7 +7,6 @@ import {
 import { ModalCardBase } from '@vkontakte/vkui';
 
 export const LosingModal = ({ level, levelDifference, clickHandler }) => {
-  console.log('record', level);
   return (
     <ModalCardBase
       header={

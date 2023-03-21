@@ -15,61 +15,52 @@ import {
 } from './styled';
 import PropTypes from 'prop-types';
 
-const buttonsLength = 5;
 const getRandomInt = (max) => Math.floor(Math.random() * max);
 
-const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
+const GameBlock = ({ go, id, store }) => {
   const [currentNumber, setCurrentNumber] = useState(null);
   const [isUserMove, setUserMove] = useState(false);
   const [isGameStart, setGameStart] = useState(false);
-  const [movesHistory, setHistory] = useState([]);
   const [currentUserId, setUserId] = useState(null);
-  const [lives, setLives] = useState(3);
-  const [level, setLevel] = useState(1);
-  const [moveNumber, setNumber] = useState(1);
   const [isBackToHome, setBackToHome] = useState(true);
-  const [record, setRecord] = useState(0);
   const [isGameBegun, setGameBegun] = useState(true);
-  const [isCurrentRecord, serCurrentRecord] = useState(null);
 
-  const [isGameEnd, setGameEnd] = useState(true);
-  const [isGame, setGame] = useState(true);
+  console.log(store.game.movesHistory);
+  useEffect(() => {
+    if (!isUserMove && store.game.level !== 1) {
+      changeColorRandomElement(store.game.level);
+    }
+  }, [store.game.level, isUserMove]);
 
   useEffect(() => {
-    if (!isUserMove && level !== 1) {
-      changeColorRandomElement(level);
+    if (store.game.record > store.game.recordGame) {
+      store.gameMethods.changeRecordsGame(store.game.record);
     }
-  }, [level, isUserMove]);
-
-  useEffect(() => {
-    if (type === 'active') {
-      setGame(false);
-    }
-    if (type === 'game') {
-      setGame(true);
-    }
-  }, [type]);
+  }, [store.game.lives === 1]);
 
   const backToGame = () => {
-    setLives(3);
-    setLevel(1);
-    setNumber(1);
-    if (record > recordGame) {
-      setRecordGame(record);
-    }
-    goModals('game');
+    store.gameMethods.initialLives(3);
+    store.gameMethods.initialLevel(1);
+    store.gameMethods.changeMoveNumbers(1);
     changeColorRandomElement();
   };
 
   const lostGame = (id) => {
     setUserId({ id, color: 'red' });
-    setLives((prevState) => prevState - 1);
-    if (lives === 1) {
-      setRecord(level);
-      console.log(record);
-      setHistory([]);
-      const levelDifference = record - level;
-      goModals('active', level, levelDifference, backToGame);
+    store.gameMethods.livesDown(1);
+    if (store.game.lives === 0) {
+      store.gameMethods.changeRecords(store.game.level);
+      store.gameMethods.initialMoveHistory();
+      const levelDifference = store.game.record - store.game.level;
+      const record = store.game.record;
+      const level = store.game.level;
+
+      store.modal.goModal('active', {
+        level,
+        record,
+        levelDifference,
+        onClose: backToGame,
+      });
     }
   };
 
@@ -80,26 +71,23 @@ const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
   };
 
   const checkId = (id) => {
-    if (movesHistory.length === 1) {
-      if (id === movesHistory[0]) {
+    if (store.game.movesHistory.length === 1) {
+      if (id === store.game.movesHistory[0]) {
         setUserId({ id, color: 'green' });
-        setLevel((prevState) => prevState + 1);
-        setNumber((prevState) => prevState + 1);
+        store.gameMethods.levelUp(1);
+        store.gameMethods.addMoveNumbers(1);
 
         setTimeout(() => {
           setUserMove(false);
-          setHistory([]);
+          store.gameMethods.initialMoveHistory();
         }, 500);
       } else {
         lostGame(id);
       }
     } else {
-      if (id === movesHistory[0]) {
+      if (id === store.game.movesHistory[0]) {
         setUserId({ id, color: 'green' });
-        setHistory((prevState) => {
-          prevState.shift();
-          return prevState;
-        });
+        store.gameMethods.changeMoveHistiry();
       } else {
         lostGame(id);
       }
@@ -112,14 +100,14 @@ const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
   const changeColorRandomElement = (level = 1) => {
     changingStates();
     const funcBefore = () => {
-      const randomInt = getRandomInt(5);
+      const randomInt = getRandomInt(store.game.buttonsLength);
       setCurrentNumber(randomInt);
-      setHistory((prevState) => [...prevState, randomInt]);
+      store.gameMethods.addElementMoveHistory(randomInt);
 
       setTimeout(() => {
         setCurrentNumber(null);
 
-        if (moveNumber === level) {
+        if (store.game.moveNumber === store.game.level) {
           setUserMove(true);
         }
       }, 1000);
@@ -128,67 +116,67 @@ const GameBlock = ({ go, id, goModals, type, recordGame, setRecordGame }) => {
 
     const intervalId = setInterval(function () {
       count++;
-      if (count === level) {
+      if (count === store.game.level) {
         clearInterval(intervalId);
       }
       funcBefore();
     }, 2000);
   };
-  const arrayElement = [...Array(buttonsLength).keys()].map((id) => (
+  const arrayElement = [...Array(store.game.buttonsLength).keys()].map((id) => (
     <Element
       key={id}
       disabled={!isUserMove}
       $isActive={id === currentNumber}
-      onClick={() => checkId(id, level)}
+      onClick={() => checkId(id)}
       $isChecked={id === currentUserId?.id ? currentUserId?.color : null}
     />
   ));
 
   return (
     <Panel id={id}>
-      {isGame && (
-        <Container>
-          <Header>
-            {isBackToHome && (
-              <ButtonStyled onClick={go} data-to="main" variant="contained">
-                Рекорд: {recordGame}
-              </ButtonStyled>
-            )}
-            {isGameStart && (
-              <ButtonStyled variant="contained">
-                {isUserMove ? 'ход игрока' : 'ход компьютера'}
-              </ButtonStyled>
-            )}
-            {isGameBegun && (
-              <ButtonStyled
-                onClick={() => changeColorRandomElement()}
-                variant="contained"
-              >
-                Начать игру
-              </ButtonStyled>
-            )}
-            {recordGame > 0 && <Record> Рекорд: {recordGame} </Record>}
-          </Header>
-          {isGameEnd && <Game>{arrayElement}</Game>}
-          <Footer>
-            {isGameStart && (
-              <>
-                <Text> Уровень: {level}</Text>
-                <Text> Жизни: {lives}</Text>
-              </>
-            )}
-            {isBackToHome && (
-              <BackToMainMenuButton
-                onClick={go}
-                data-to="main"
-                variant="contained"
-              >
-                Назад
-              </BackToMainMenuButton>
-            )}
-          </Footer>
-        </Container>
-      )}
+      <Container>
+        <Header>
+          {isBackToHome && (
+            <ButtonStyled onClick={go} data-to="main" variant="contained">
+              Рекорд: {store.game.recordGame}
+            </ButtonStyled>
+          )}
+          {isGameStart && (
+            <ButtonStyled variant="contained">
+              {isUserMove ? 'ход игрока' : 'ход компьютера'}
+            </ButtonStyled>
+          )}
+          {isGameBegun && (
+            <ButtonStyled
+              onClick={() => changeColorRandomElement()}
+              variant="contained"
+            >
+              Начать игру
+            </ButtonStyled>
+          )}
+          {store.game.recordGame > 0 && (
+            <Record> Рекорд: {store.game.recordGame} </Record>
+          )}
+        </Header>
+        <Game>{arrayElement}</Game>
+        <Footer>
+          {isGameStart && (
+            <>
+              <Text> Уровень: {store.game.level}</Text>
+              <Text> Жизни: {store.game.lives}</Text>
+            </>
+          )}
+          {isBackToHome && (
+            <BackToMainMenuButton
+              onClick={go}
+              data-to="main"
+              variant="contained"
+            >
+              Назад
+            </BackToMainMenuButton>
+          )}
+        </Footer>
+      </Container>
     </Panel>
   );
 };
